@@ -1,0 +1,35 @@
+Sharing of Limited Resources / Producer-consumer
+
+1. Create an array of semaphores called "doors" with size NUM_DOORS.
+2. Create a semaphore called "train_capacity" with an initial value of TRAIN_CAPACITY.
+3. Decrement the train capacity by initial_passengers_in_train times.
+4. Print "Train arrives at station A. Passengers in train: initial_passengers_in_train".
+5. Set passengers_leaving_at_station_A to the number of passengers leaving at station A.
+6. Print "Train arrives at station A. Passengers leaving train: passengers_leaving_at_station_A".
+7. Repeat passengers_leaving_at_station_A times:
+   a. Fork a child process.
+   b. If the child process:
+      - Get the passenger ID.
+      - Find an available door using the findAvailableDoor function.
+      - Increment the train capacity by calling sem_post(train_capacity).
+      - Print "Passenger passenger_id left the train through door door_number".
+      - Exit the child process.
+8. Wait for all passenger leaving processes to complete.
+9. Set passengers_waiting_at_station_A to the number of passengers waiting at station A.
+10. Print "Train arrives at station A. Passengers waiting train: passengers_waiting_at_station_A".
+11. Repeat passengers_waiting_at_station_A times:
+    a. Fork a child process.
+    b. If the child process:
+       - Get the passenger ID.
+       - Try to decrement the train capacity using sem_trywait(train_capacity).
+       - If successful:
+         - Find an available door using the findAvailableDoor function.
+         - Print "Passenger passenger_id is inside the train through door door_number".
+       - Exit the child process.
+12. Wait for all passenger waiting processes to complete.
+13. Get the current passenger ID.
+14. Print "Train departs from station A. Passengers in train: TRAIN_CAPACITY".
+15. Close and unlink the train_capacity semaphore.
+16. Close and unlink each semaphore in the doors array.
+17. Exit the program.
+

@@ -1,0 +1,124 @@
+---PATTERN----------------------------------------------------------------------
+
+The pattern used is the Reader-Writer pattern.
+
+The first program is the reader process, the second is the initializer process 
+and the last one is the writer.
+
+These 3 manage shared memory and ensure proper synchronization.
+
+---PSEUDOCODE-------------------------------------------------------------------
+
+Define SHM_SIZE as 1024
+
+Declare key as key_t
+Declare shmid as integer
+Declare mutex as sem_t pointer
+Declare wrt as sem_t pointer
+Declare shm as pointer to struct shared_memory
+
+Define struct shared_memory:
+    Declare reader_count as integer
+    Declare writer_count as integer
+    Declare data as character array of size 100
+
+Main:
+    Generate key based on file name and identifier
+    Get existing shared memory segment identified by key with size SHM_SIZE
+    Attach shared memory segment to shm using shmid
+    
+    Open existing mutex semaphore identified by "/mutex" for reading and writing
+    Open existing write semaphore identified by "/write" for reading and writing
+    
+    Loop indefinitely:
+        Acquire mutex semaphore for mutual exclusion
+        Increment reader count in shared memory
+        If this is the first reader:
+            Acquire write semaphore to block writers
+        Release mutex semaphore
+        
+        Simulate some processing time
+        Print "Data read from memory: <shm->data>"
+        Print "Number of readers: <shm->reader_count>"
+        
+        Acquire mutex semaphore
+        Decrement reader count in shared memory
+        If no more readers:
+            Release write semaphore to allow writers
+        Release mutex semaphore
+
+    Exit the program
+
+----------------------------------------------------------------------------------------------------
+
+Define SHM_SIZE as 1024
+
+Declare key as key_t
+Declare shmid as integer
+Declare mutex as sem_t pointer
+Declare wrt as sem_t pointer
+Declare shm as pointer to struct shared_memory
+
+Define struct shared_memory:
+    Declare reader_count as integer
+    Declare writer_count as integer
+    Declare data as character array of size 100
+
+Main:
+    Generate key based on file name and identifier
+    Create a new shared memory segment identified by key with size SHM_SIZE and permissions 0666 | IPC_CREAT
+    Attach shared memory segment to shm using shmid
+    
+    Create/open a new mutex semaphore identified by "/mutex" with permissions 0644 and initial value 1
+    Create/open a new write semaphore identified by "/write" with permissions 0644 and initial value 1
+    
+    Initialize reader count to 0 in shared memory
+    Initialize writer count to 0 in shared memory
+    Initialize data to an empty string in shared memory
+    
+    Detach shared memory segment from the process
+    
+    Exit the program
+
+
+---------------------------------------------------------------------------------------------------
+
+Define SHM_SIZE as 1024
+
+Declare key as key_t
+Declare shmid as integer
+Declare mutex as sem_t pointer
+Declare wrt as sem_t pointer
+Declare shm as pointer to struct shared_memory
+
+Define struct shared_memory:
+    Declare reader_count as integer
+    Declare writer_count as integer
+    Declare data as character array of size 100
+
+Main:
+    Generate key based on file name and identifier
+    Get existing shared memory segment identified by key with size SHM_SIZE
+    Attach shared memory segment to shm using shmid
+    
+    Open existing mutex semaphore identified by "/mutex" for reading and writing
+    Open existing write semaphore identified by "/write" for reading and writing
+    
+    Loop indefinitely:
+        Acquire mutex semaphore for mutual exclusion
+        Increment writer count in shared memory
+        Print "Number of writers: <shm->writer_count>"
+        Print "Number of readers: <shm->reader_count>"
+        Release mutex semaphore
+        
+        Acquire write semaphore for write access
+        
+        Write "PID: <getpid()>, Time: <time(NULL)>" to shm->data
+        
+        Release write semaphore
+        
+        Acquire mutex semaphore
+        Decrement writer count in shared memory
+        Release mutex semaphore
+
+    Exit the program

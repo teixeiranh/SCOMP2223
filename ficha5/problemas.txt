@@ -1,0 +1,9 @@
+Exercícios não resolvidos:
+==========================
+-ex06
+-ex09
+-ex11
+
+Exercícios com problemas:
+=========================
+-ex04 

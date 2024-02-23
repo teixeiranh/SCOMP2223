@@ -1,0 +1,58 @@
+Execution synchronization
+
+1. Remove any previous version of the file Output.txt
+
+2. Initialize two semaphores with mutual exclusion for accessing shared resources: sem_read and sem_write
+
+3. Create 8 new child processes
+   for each i in range [0, NUM_CHILDS):
+       fork a new process
+       if fork is unsuccessful:
+           print an error message and exit
+       else if fork is successful and it is the child process:
+           open the input file for reading
+           open the output file for appending
+
+           if either file opening failed:
+               print an error message and exit
+
+           declare an integer variable "number"
+
+           for each k in range [0, NUMBER_COUNT):
+               wait on the sem_read semaphore to enter the critical section for reading
+
+               read an integer from the input file into "number"
+
+               release the sem_read semaphore to exit the critical section for reading
+
+               wait on the sem_write semaphore to enter the critical section for writing
+
+               write the process ID and "number" to the output file
+
+               release the sem_write semaphore to exit the critical section for writing
+
+           close the input and output files
+
+           exit the child process
+
+4. Wait for all child processes to finish
+   for each i in range [0, NUM_CHILDS):
+       wait for any child process to finish
+
+5. Clean up the sem_read semaphore
+   close the sem_read semaphore
+   if closing the semaphore failed:
+       print an error message and exit
+   unlink (remove) the sem_read semaphore
+   if unlinking the semaphore failed:
+       print an error message and exit
+
+6. Clean up the sem_write semaphore
+   close the sem_write semaphore
+   if closing the semaphore failed:
+       print an error message and exit
+   unlink (remove) the sem_write semaphore
+   if unlinking the semaphore failed:
+       print an error message and exit
+
+7. Exit the program

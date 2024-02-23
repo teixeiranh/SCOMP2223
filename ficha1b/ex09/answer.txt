@@ -1,0 +1,20 @@
+a)
+    Ok.
+b)
+    If I press CTRL-C  it will send the SIGINT (signal interrupt) signal to the process,
+    which will interrupt the program's execution and terminate it immediately.
+c)
+    Ok.
+d)
+    It will send a SIGQUIT (signal quit) signal to the process, which will also interrupt the program's execution 
+    and terminate it immediately.
+e)
+    Ok.
+f)
+    The handle_sigint() will be executed and it will print the "I won't let the process end with CTRL-C!" message to 
+    the console. However, the problem will terminate after the signal is received.
+g)
+    This time, the hangle_sigquit() it will print "I won't let the process and by pressing CTRL-\". It will also terminate
+    the process.
+h)
+    The %1 refers to the job number of the suspended process.

@@ -1,0 +1,12 @@
+a)
+    The "CTRL-C" sends a SIGINT signal  to the process and kills it. In fact,
+    the default action is to terminate the process. 
+
+c)
+    With CTRL-\ we use the terminal quit character, ie, SIGQUIT.
+    In this case, by default, the signal terminates a process and causes it to 
+    produce a core dump - which can then be used for debugging.
+    Using SIGQUIT in this manner is good for a program that is stucked in an infinite
+    loop.
+
+    

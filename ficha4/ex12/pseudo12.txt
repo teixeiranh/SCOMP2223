@@ -1,0 +1,76 @@
+Producer-consumer
+
+1. Create shared memory for the circular buffer.
+2. Create a semaphore called "mutex" with an initial value of 1 for mutual exclusion.
+3. Create a semaphore called "empty" with an initial value of 0 for empty slots.
+4. Create a semaphore called "full" with an initial value of BUFFER_SIZE for full slots.
+5. Sleep for 1 second to allow the shared memory and semaphores to be set up.
+6. Fork the first producer process.
+7. If the current process is the first producer:
+   a. Enter a loop from 0 to NUM_VALUES - 1.
+      i. Wait for a full slot using sem_wait(full).
+      ii. Acquire mutual exclusion using sem_wait(mutex).
+      iii. Produce a value and add it to the circular buffer.
+      iv. Print the produced value.
+      v. Release mutual exclusion using sem_post(mutex).
+      vi. Release an empty slot using sem_post(empty).
+      vii. Sleep for 1 second.
+   b. Exit the process.
+8. Fork the second producer process.
+9. If the current process is the second producer:
+   a. Enter a loop from NUM_VALUES to NUM_VALUES * 2 - 1.
+      i. Wait for a full slot using sem_wait(full).
+      ii. Acquire mutual exclusion using sem_wait(mutex).
+      iii. Produce a value and add it to the circular buffer.
+      iv. Print the produced value.
+      v. Release mutual exclusion using sem_post(mutex).
+      vi. Release an empty slot using sem_post(empty).
+      vii. Sleep for 1 second.
+   b. Exit the process.
+10. Enter a loop from 0 to NUM_VALUES * 2 - 1 as the consumer process.
+    a. Wait for an empty slot using sem_wait(empty).
+    b. Consume a value from the circular buffer.
+    c. Print the consumed value.
+    d. Release a full slot using sem_post(full).
+    e. Sleep for 2 seconds.
+11. Clean up resources and wait for producer processes to complete.
+12. Close and unlink the semaphores.
+13. Unlink the shared memory.
+14. Exit the program.
+1. Create shared memory for the circular buffer.
+2. Create a semaphore called "mutex" with an initial value of 1 for mutual exclusion.
+3. Create a semaphore called "empty" with an initial value of 0 for empty slots.
+4. Create a semaphore called "full" with an initial value of BUFFER_SIZE for full slots.
+5. Sleep for 1 second to allow the shared memory and semaphores to be set up.
+6. Fork the first producer process.
+7. If the current process is the first producer:
+   a. Enter a loop from 0 to NUM_VALUES - 1.
+      i. Wait for a full slot using sem_wait(full).
+      ii. Acquire mutual exclusion using sem_wait(mutex).
+      iii. Produce a value and add it to the circular buffer.
+      iv. Print the produced value.
+      v. Release mutual exclusion using sem_post(mutex).
+      vi. Release an empty slot using sem_post(empty).
+      vii. Sleep for 1 second.
+   b. Exit the process.
+8. Fork the second producer process.
+9. If the current process is the second producer:
+   a. Enter a loop from NUM_VALUES to NUM_VALUES * 2 - 1.
+      i. Wait for a full slot using sem_wait(full).
+      ii. Acquire mutual exclusion using sem_wait(mutex).
+      iii. Produce a value and add it to the circular buffer.
+      iv. Print the produced value.
+      v. Release mutual exclusion using sem_post(mutex).
+      vi. Release an empty slot using sem_post(empty).
+      vii. Sleep for 1 second.
+   b. Exit the process.
+10. Enter a loop from 0 to NUM_VALUES * 2 - 1 as the consumer process.
+    a. Wait for an empty slot using sem_wait(empty).
+    b. Consume a value from the circular buffer.
+    c. Print the consumed value.
+    d. Release a full slot using sem_post(full).
+    e. Sleep for 2 seconds.
+11. Clean up resources and wait for producer processes to complete.
+12. Close and unlink the semaphores.
+13. Unlink the shared memory.
+14. Exit the program.

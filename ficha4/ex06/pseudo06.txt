@@ -1,0 +1,35 @@
+Execution synchronization
+
+1. Create two semaphores, semS and semC.
+2. Check if semaphore creation was successful. If not, print an error and exit.
+3. Fork a child process.
+   - If pid is less than 0, it means forking failed. Print an error and exit.
+   - If pid is 0, it means this is the child process.
+     - Enter a loop for n = 0 to 10000.
+       - Get the current values of semC and semS using sem_getvalue.
+       - If the difference between semC and semS is greater than 2, wait on semC.
+       - If the difference between semS and semC is greater than 2, wait on semS.
+       - Wait on semS.
+       - Print "S".
+       - Flush the standard output.
+       - Post semC.
+       - Sleep for 0.2 seconds.
+       - Increment n.
+     - Exit the child process.
+   - If pid is greater than 0, it means this is the parent process.
+     - Enter a loop for n = 0 to 10000.
+       - Get the current values of semC and semS using sem_getvalue.
+       - If the difference between semC and semS is greater than 2, wait on semC.
+       - If the difference between semS and semC is greater than 2, wait on semS.
+       - Wait on semC.
+       - Print "C".
+       - Post semS.
+       - Flush the standard output.
+       - Sleep for 0.2 seconds.
+       - Increment n.
+     - Wait for the child process to complete using wait(NULL).
+     - Clean up the semaphores:
+       - Close semS and handle errors if any.
+       - Close semC and handle errors if any.
+       - Unlink (remove) the semaphores SEM_S and SEM_C and handle errors if any.
+4. Exit the program.

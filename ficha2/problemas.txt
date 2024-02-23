@@ -1,0 +1,9 @@
+Exercícios não resolvidos:
+==========================
+-
+
+
+Exercícios com problemas:
+=========================
+-ex10-duvida no fecho da execução do programa (tirar na aula PL)
+-ex12-indexação por id, teria de ser reformulado se o numero de produtos for diferente do numero de barcode scanners

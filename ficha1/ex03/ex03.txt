@@ -1,0 +1,19 @@
+3
+a) 
+    Line 2 creates a total of 8 processes. 
+    Each call will duplicate the calling process.
+
+b)
+        |
+        |---------------|       
+        |               |     
+        |               |
+        |-------|       |-------|
+        |       |       |       |
+        |       |       |       |
+        |---|   |---|   |---|   |---|
+        |   |   |   |   |   |   |   |
+
+
+c)
+    Has we have 8 processes, we will print SCOMP 8 times.

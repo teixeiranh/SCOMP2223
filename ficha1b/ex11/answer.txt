@@ -1,0 +1,4 @@
+No. Some signals, such as SIGKILL and SIGSTOP, cannot be blocked or ignored
+by a process. Attempting to block or ignore them using sigprocmask() or signal() will
+have no effect. These are signals used by the operating system and are used to terminate
+or stop a process forcefully. 

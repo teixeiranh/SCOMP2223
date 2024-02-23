@@ -1,0 +1,11 @@
+Signal      Default action          Description
+SIGINT      Terminate process       Interrupt program
+SIGILL      Create core image       Illegal instruction
+SIGKILL     Terminate process       Kill program (can’t be ignored or handled)
+SIGSEGV     Create core image       Segmentation violation (illegal memory access)
+SIGALRM     Terminate process       Real-time timer expired
+SIGSTOP     Stop process            Stop (can’t be ignored or handled)
+SIGCONT     Discard signal          Continue after stop
+SIGCHLD     Discard signal          Child status has changed
+SIGUSR1     Terminate process       User defined signal 1
+SIGUSR2     Terminate process       User defined signal 2

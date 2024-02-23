@@ -1,0 +1,69 @@
+---PATTERN----------------------------------------------------------------------
+
+The pattern used is the Synchronization (Execution) pattern using semaphores.
+
+The program creates three child processes, each responsible for printing a part of a message. 
+The semaphores are used to synchronize the execution of the child processes and ensure 
+the correct order of the printed message.
+
+Semaphore1, Semaphore2, and Semaphore3 are used to control the flow of execution 
+between the child processes, just like this:
+
+    -Child Process 1 prints "Sistemas" and signals Semaphore1. It then waits for Semaphore3 
+before printing "a" and signaling Semaphore1.
+
+    -Child Process 2 waits for Semaphore1 before printing "de" and signaling Semaphore2. 
+It then waits for Semaphore1 again before printing "melhor" and signaling Semaphore2.
+
+    -Child Process 3 waits for Semaphore2 before printing "Computadores -" and signaling 
+Semaphore3. It then waits for Semaphore2 again before printing "disciplina do mundo <3 
+(juntamente com ARQCP heheh)!\n".
+
+By using the semaphores, the child processes are synchronized in such a way that they 
+print their respective parts of the message in the correct order. Each process waits 
+for the appropriate semaphore to be signaled before proceeding with its task.
+
+---PSEUDOCODE-------------------------------------------------------------------
+
+Create semaphore1 with initial value 0
+Create semaphore2 with initial value 0
+Create semaphore3 with initial value 0
+
+Create Child Process 1:
+    if fork() returns 0:
+        Print "Sistemas "
+        Signal semaphore1
+
+        Wait for semaphore3
+        Print "a "
+        Signal semaphore1
+
+        Exit Child Process 1
+
+Create Child Process 2:
+    if fork() returns 0:
+        Wait for semaphore1
+        Print "de "
+        Signal semaphore2
+
+        Wait for semaphore1
+        Print "melhor "
+        Signal semaphore2
+
+        Exit Child Process 2
+
+Create Child Process 3:
+    if fork() returns 0:
+        Wait for semaphore2
+        Print "Computadores - "
+        Signal semaphore3
+
+        Wait for semaphore2
+        Print "disciplina do mundo <3 (juntamente com ARQCP heheh)!\n"
+        Exit Child Process 3
+
+Wait for all child processes to finish
+
+Cleanup semaphores
+
+Exit the program

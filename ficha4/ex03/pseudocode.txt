@@ -1,0 +1,71 @@
+---PATTERN----------------------------------------------------------------------
+
+The pattern used here is Producer-Consumer.
+
+We will have a producer process writing strings to a shared memory area, then these
+processes synchronize the access to the area via a semaphore.
+
+The semaphore is used to control access to the shared memory. The producer process 
+acquires the semaphore before writing to the shared memory and releases it afterward. 
+The consumer process tries to acquire the semaphore and waits if it's not available.
+
+This pattern ensures that the producer and consumer processes can safely access 
+the shared memory without conflicts.
+
+---PSEUDOCODE-------------------------------------------------------------------
+
+Define SHM_NAME as "/my_shared_memory"
+Define SEM_NAME as "/my_semaphore"
+Define MAX_STRINGS as 50
+Define MAX_STRING_LEN as 80
+Define MAX_WAIT_TIME as 12
+
+Main:
+    Seed the random number generator with the current time
+    
+    semaphore = sem_open(SEM_NAME, O_CREAT, 0644, 1) // Open or create the semaphore
+    if semaphore == SEM_FAILED:
+        Print error message
+        Exit program
+    
+    sharedMemoryFiledes = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666) // Open or create the shared memory object
+    if sharedMemoryFiledes == -1:
+        Print error message
+        Exit program
+    
+    if ftruncate(sharedMemoryFiledes, MAX_STRINGS * MAX_STRING_LEN) == -1: // Set the size of the shared memory object
+        Print error message
+        Exit program
+    
+    shared_memory = mmap(NULL, MAX_STRINGS * MAX_STRING_LEN, PROT_READ | PROT_WRITE, MAP_SHARED, sharedMemoryFiledes, 0) // Map the shared memory object into the process's address space
+    if shared_memory == MAP_FAILED:
+        Print error message
+        Exit program
+    
+    currentStringIndex = 0
+    
+    while currentStringIndex < MAX_STRINGS:
+        start = current time
+        
+        while sem_trywait(semaphore) == -1: // Try to acquire the semaphore
+            if current time - start >= MAX_WAIT_TIME: // Check if the waiting time exceeds the maximum wait time
+                Print error message
+                Exit program
+            Sleep for 1 second
+        
+        if random number % 100 < 70 and currentStringIndex < MAX_STRINGS: // 70% probability to write a new string
+            Write "I'm the Father - with PID <current process PID>" to shared_memory[currentStringIndex] // Write the string to the shared memory
+            Increment currentStringIndex
+        
+        else if currentStringIndex > 0: // 30% probability to remove the last string
+            Decrement currentStringIndex
+            Clear shared_memory[currentStringIndex] // Clear the last string from the shared memory
+        
+        Sleep for random number % 5 + 1 seconds // Sleep outside the semaphore lock
+        Release the semaphore
+    
+    Close the semaphore
+    Unmap the shared memory
+    Close the shared memory object
+    
+    Exit program

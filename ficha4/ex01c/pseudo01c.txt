@@ -1,0 +1,38 @@
+Execution synchronization
+
+1. Define constants:
+   - NUM_CHILDREN: the number of child processes to create
+   - NUM_NUMBERS: the number of numbers to read from the input file
+   - SEMAPHORE: the base name for the semaphore
+
+2. Define a function child_process(child_num, semaphores) that represents the behavior of each child process:
+   - Open the input file for reading
+   - Open the output file for appending
+   - Declare an integer variable "number"
+   - Iterate for i in the range [0, NUM_NUMBERS):
+       - Wait on the semaphore corresponding to the current child process
+       - Read a number from the input file into "number"
+       - Write the process ID and "number" to the output file
+       - Signal the next child process to continue by posting the semaphore
+   - Close the input and output files
+
+3. In the main function:
+   - Declare an array of semaphores, semaphores[NUM_CHILDREN]
+   - Initialize the semaphores:
+     - For i in the range [0, NUM_CHILDREN):
+       - Create a semaphore with a unique name based on SEMAPHORE and index i
+       - Set the initial value of the semaphore to 1 for the first child process and 0 for the others
+   - Remove any previous version of the output file
+   - Create child processes:
+     - For i in the range [0, NUM_CHILDREN):
+       - Fork a new process
+       - If it is a child process:
+         - Call the child_process function with the child number and the array of semaphores
+         - Exit the child process
+   - Wait for all child processes to finish
+   - Close and unlink the semaphores:
+     - For i in the range [0, NUM_CHILDREN):
+       - Close the semaphore
+       - Unlink the semaphore by its unique name
+
+4. Exit the program

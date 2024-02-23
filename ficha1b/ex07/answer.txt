@@ -1,0 +1,13 @@
+a)
+    It is safe to use async-signal-safe functions.
+    All the functions from stdio are not async-signal-safe.
+    These functions must maintain a statically allocated data and, when used 
+    can operate on inconsistent data.
+
+b)
+    
+    Because POSIX.1 specifies write() as an async-signal-safe function, ie, 
+    is safe to use in a signal handler. The reason for this is it writes directly
+    to a file descriptor without using any internal buffers or data structures that
+    could be corrupted by a signal.
+

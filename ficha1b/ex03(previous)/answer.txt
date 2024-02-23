@@ -1,0 +1,49 @@
+a)
+    The more suitable to handle signals is the "sigaction" function.
+    Sigaction() allows one to specify a struct sigaction that will include
+    multiple fields that control de behavior of signal handling. Besides that, 
+    sigaction() also provides additonal features such as the ability to specify 
+    a signal mask that will be applied while the signal handler function is 
+    running, the ability to specify an alternate signal stack for the handler 
+    function, and the ability to retrieve information about the source of the 
+    signal. 
+
+b)
+    Here is the prototype of the sigaction() function:
+    
+    ----------------------------------------------------------------------------
+    #include <signal.h>
+    
+    int sigaction(int sig, const struct sigaction *act, struct sigaction *oldact);
+        Returns 0 on sucess, -1 on error
+    ----------------------------------------------------------------------------
+
+    sig - The sig argument identifies the signal whose disposition we want to retrieve
+    or change;
+
+    act - The act argument is a pointer to a structure specifying a new disposition
+    for the signal;
+
+    oldact - The oldact argument is a pointer to a structure of the same type of act,
+    and is used to return information about the signal's previous disposition;
+
+d)
+
+    No, it is not.
+    We can't use those kinds of data because it will make the handle function 
+    nonreentrant - a function that only employs local variables is guaranteed to 
+    be reentrant. 
+    Updating global or static data structures or variables will cause issues when
+    two different threads invoke the function, because those updates will interfere 
+    with one another, producing incorrect results.
+
+e)
+    We can call "async-signal-safe" functions.
+    "An  async-signal-safe  function  is  one that can be safely called from 
+    within a signal handler.  Many functions are not async-signal-safe.
+    In particular,  nonreentrant functions are generally unsafe to call from a 
+    signal handler.
+
+
+
+    

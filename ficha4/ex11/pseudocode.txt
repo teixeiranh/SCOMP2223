@@ -1,0 +1,108 @@
+---PATTERN----------------------------------------------------------------------
+
+The pattern used here is Producer-Consumer.
+
+The client process acts as the consumer, requesting and receiving tickets from 
+the seller process, which acts as the producer. The semaphores are used to synchronize 
+the communication and ensure that the client and seller processes take turns and maintain 
+the correct order of operations. The shared memory is used to share data, in this case, 
+the ticket counter, between the two processes.
+
+---PSEUDOCODE-------------------------------------------------------------------
+
+Define SEMAPHORE_CUSTOMER as "/sem_customer"
+Define SEMAPHORE_SELLER as "/sem_seller"
+Define SHARED_MEM_NAME as "/shared_mem"
+
+Main:
+    Declare ticketCounter as integer pointer // Pointer to the shared ticket counter
+    Declare filedes as integer // File descriptor for shared memory
+    
+    semaphoreCustomer = sem_open(SEMAPHORE_CUSTOMER, O_RDWR) // Open the client semaphore for reading and writing
+    if semaphoreCustomer == SEM_FAILED:
+        Print error message
+        Exit program
+    
+    semaphoreSeller = sem_open(SEMAPHORE_SELLER, O_RDWR) // Open the seller semaphore for reading and writing
+    if semaphoreSeller == SEM_FAILED:
+        Print error message
+        Exit program
+    
+    filedes = shm_open(SHARED_MEM_NAME, O_RDWR, 0600) // Open the shared memory segment for reading and writing
+    if filedes == -1:
+        Print error message
+        Exit program
+    
+    ticketCounter = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED, filedes, 0) // Map the shared memory segment into the process's address space
+    if ticketCounter == MAP_FAILED:
+        Print error message
+        Exit program
+    
+    Seed the random number generator with the current time
+    Generate a random wait time between 1 and 10 seconds
+    Sleep for the generated wait time
+    
+    Notify the seller that the client is ready to receive a ticket
+    Wait for the seller to process the ticket
+    Print "Client <process ID> received ticket number <ticketCounter>"
+    
+    Close the client semaphore
+    Close the seller semaphore
+    Unmap the shared memory segment
+    Close the shared memory file descriptor
+    
+    Exit program
+
+------------------------------------------------------------------------------------------------------------------------
+
+Define SEMAPHORE_CUSTOMER as "/sem_customer"
+Define SEMAPHORE_SELLER as "/sem_seller"
+Define SHARED_MEM_NAME as "/shared_mem"
+Define NUM_TICKETS as 100
+
+Main:
+    Declare ticketCounter as integer pointer // Pointer to the shared ticket counter
+    Declare filedes as integer // File descriptor for shared memory
+    
+    semaphoreCustomer = sem_open(SEMAPHORE_CUSTOMER, O_CREAT, 0600, 1) // Open or create the client semaphore with permissions 0600 and initial value 1
+    if semaphoreCustomer == SEM_FAILED:
+        Print error message
+        Exit program
+    
+    semaphoreSeller = sem_open(SEMAPHORE_SELLER, O_CREAT, 0600, 0) // Open or create the seller semaphore with permissions 0600 and initial value 0
+    if semaphoreSeller == SEM_FAILED:
+        Print error message
+        Exit program
+    
+    filedes = shm_open(SHARED_MEM_NAME, O_CREAT | O_RDWR, 0600) // Create or open the shared memory segment with read and write permissions
+    if filedes == -1:
+        Print error message
+        Exit program
+    
+    if ftruncate(filedes, sizeof(int)) == -1: // Set the size of the shared memory segment to hold an integer
+        Print error message
+        Exit program
+    
+    ticketCounter = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED, filedes, 0) // Map the shared memory segment into the process's address space
+    if ticketCounter == MAP_FAILED:
+        Print error message
+        Exit program
+    
+    Set the value of ticketCounter to 1 // Initialize the ticket counter
+    
+    while ticketCounter <= NUM_TICKETS: // Sell tickets until the ticket counter reaches the maximum number of tickets
+        Wait for the seller semaphore
+        Print "Serving ticket <ticketCounter>"
+        Increment ticketCounter
+        Signal the client semaphore
+        Sleep for 1 second to simulate serving time
+    
+    Close the client semaphore
+    Close the seller semaphore
+    Remove the client semaphore from the system
+    Remove the seller semaphore from the system
+    Unmap the shared memory segment
+    Close the shared memory file descriptor
+    Remove the shared memory segment from the system
+    
+    Exit program

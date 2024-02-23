@@ -1,0 +1,68 @@
+Producer-consumer 
+
+
+WRITER
+1. Define constants:
+   - SHARED_MEM_SIZE: the maximum number of lines that can be stored in shared memory
+   - MAX_STRING_LENGTH: the maximum length of a line
+
+2. Define a struct SharedMemory to represent the shared memory:
+   - Declare a 2-dimensional array "lines" to store the lines
+   - Declare an integer "current_lines" to keep track of the number of lines stored
+   - Declare two semaphores "sem_writer" and "sem_reader" for synchronization
+
+3. Define a function write_to_shared_memory(shared_memory) that represents the behavior of the writer process:
+   - Generate a unique line for the current process using the process ID
+   - Loop indefinitely:
+     - Wait on the writer semaphore
+     - Check if the shared memory is full (current_lines equals SHARED_MEM_SIZE):
+       - If it is full, signal the reader semaphore and exit the loop
+     - Copy the generated line to the next available index in the "lines" array
+     - Increment "current_lines"
+     - Signal the reader semaphore
+     - Generate a random sleep time between 1 and 5 seconds
+     - Sleep for the generated time
+
+4. In the main function:
+   - Create a shared memory segment using shm_open
+   - Set the size of the shared memory segment using ftruncate
+   - Map the shared memory segment into the address space of the process using mmap
+   - Initialize the semaphores in the shared memory
+   - Initialize "current_lines" to 0
+   - Call the write_to_shared_memory function with the shared_memory struct
+   - Unmap the shared memory segment using munmap
+   - Unlink the shared memory segment using shm_unlink
+   - Destroy the semaphores
+
+5. Exit the program
+
+READER
+1. Define constants:
+   - SHARED_MEM_SIZE: the maximum number of lines that can be stored in shared memory
+   - MAX_STRING_LENGTH: the maximum length of a line
+
+2. Define a struct SharedMemory to represent the shared memory:
+   - Declare a 2-dimensional array "lines" to store the lines
+   - Declare an integer "current_lines" to keep track of the number of lines stored
+   - Declare two semaphores "sem_writer" and "sem_reader" for synchronization
+
+3. Define a function read_shared_memory(shared_memory) that represents the behavior of the reader process:
+   - Loop indefinitely:
+     - Wait on the reader semaphore
+     - Check if the shared memory is empty (current_lines equals 0):
+       - If it is empty, signal the writer semaphore and exit the loop
+     - Print the number of current lines
+     - Iterate over the lines in the shared memory and print each line
+     - Signal the writer semaphore
+     - Sleep for 1 second
+
+4. In the main function:
+   - Open the existing shared memory segment using shm_open
+   - Map the shared memory segment into the address space of the process using mmap
+   - Call the read_shared_memory function with the shared_memory struct
+   - Unmap the shared memory segment using munmap
+
+5. Exit the program
+
+
+

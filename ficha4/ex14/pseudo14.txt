@@ -1,0 +1,77 @@
+Sleeping barber
+
+1. Define SHARED_MEMORY_SIZE as the desired size of the shared memory.
+2. Define NUM_AX_PROCESSES as the desired number of AX processes.
+3. Define NUM_BX_PROCESSES as the desired number of BX processes.
+4. Declare semaphore_ax and semaphore_bx as semaphores.
+5. Declare shared_memory as an array of integers with size SHARED_MEMORY_SIZE.
+
+6. Define a function print_shared_memory():
+7.     Iterate over shared_memory:
+8.         Print the value of each element
+
+9. Define a function ax_process(process_id):
+10.    Declare a variable n and set it to 0.
+11.    Repeat while n is less than 3:
+12.        Sleep for 5 seconds.
+
+13.        Wait on semaphore_ax.
+
+14.        Print "AX" followed by process_id and "is placing data on the shared memory."
+15.        Iterate over shared_memory:
+16.            Set the value of each element to process_id * 100 + index.
+
+17.        Call print_shared_memory().
+
+18.        Sleep for 1 second.
+
+19.        Post semaphore_ax to signal other AX processes to access shared memory.
+20.        Post semaphore_bx to release access to shared memory to BX processes.
+21.        Increment n by 1.
+
+22. Define a function bx_process(process_id):
+23.    Declare a variable n and set it to 0.
+24.    Repeat while n is less than 3:
+25.        Sleep for 6 seconds.
+
+26.        Wait on semaphore_bx.
+
+27.        Print "BX" followed by process_id and "is placing data on the shared memory."
+28.        Iterate over shared_memory:
+29.            Set the value of each element to -process_id * 100 - index.
+
+30.        Call print_shared_memory().
+
+31.        Sleep for 1 second.
+
+32.        Post semaphore_bx to signal other BX processes to access shared memory.
+33.        Post semaphore_ax to release access to shared memory to AX processes.
+34.        Increment n by 1.
+
+35. Begin the main function:
+36.    Create semaphore_ax using sem_open with "/semaphore_ax", O_CREAT flag, and initial value 1.
+37.    Create semaphore_bx using sem_open with "/semaphore_bx", O_CREAT flag, and initial value 0.
+
+38.    Create AX processes:
+39.        Repeat for each i from 0 to NUM_AX_PROCESSES - 1:
+40.            If fork() is 0, then:
+41.                Call ax_process(i).
+42.                Exit the process.
+
+43.    Create BX processes:
+44.        Repeat for each i from 0 to NUM_BX_PROCESSES - 1:
+45.            If fork() is 0, then:
+46.                Call bx_process(i).
+47.                Exit the process.
+
+48.    Wait for all child processes to finish:
+49.        Repeat for each i from 0 to NUM_AX_PROCESSES + NUM_BX_PROCESSES - 1:
+50.            Call wait(NULL).
+
+51.    Close semaphore_ax.
+52.    Unlink "/semaphore_ax".
+53.    Close semaphore_bx.
+54.    Unlink "/semaphore_bx".
+
+55. End the main function.
+

@@ -1,0 +1,29 @@
+Execution synchronization
+
+1. Create two semaphores, sem_child1 and sem_child2.
+
+2. Check if semaphores creation was successful. If not, print an error and exit.
+
+3. Fork the first child process, pid1.
+   - If pid1 is 0, it means this is the first child process.
+     - Wait for permission to proceed by calling sem_wait(sem_child1).
+     - Print "1st child".
+     - Exit the child process.
+
+   - If pid1 is greater than 0, it means this is the parent process.
+     - Fork the second child process, pid2.
+       - If pid2 is 0, it means this is the second child process.
+         - Wait for permission to proceed by calling sem_wait(sem_child2).
+         - Print "2nd child".
+         - Exit the child process.
+       
+       - If pid2 is greater than 0, it means this is still the parent process.
+         - Post the semaphore sem_child1 to give permission to the first child process to proceed.
+         - Wait for the first child process to complete by calling wait(NULL).
+         - Print "Father".
+         - Post the semaphore sem_child2 to give permission to the second child process to proceed.
+         - Wait for the second child process to complete by calling wait(NULL).
+
+4. Clean up the semaphores by calling sem_unlink("/child1_semaphore") and sem_unlink("/child2_semaphore").
+
+5. Exit the program.

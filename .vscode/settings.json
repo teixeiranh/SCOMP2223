@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "signal.h": "c",
+        "stdio.h": "c",
+        "unistd.h": "c",
+        "string.h": "c",
+        "wait.h": "c",
+        "stdlib.h": "c",
+        "fcntl.h": "c",
+        "types.h": "c",
+        "type_traits": "c",
+        "semaphore.h": "c",
+        "cstdlib": "c",
+        "mman.h": "c"
+    }
+}

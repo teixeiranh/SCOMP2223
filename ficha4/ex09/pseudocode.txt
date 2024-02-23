@@ -1,0 +1,65 @@
+---PATTERN----------------------------------------------------------------------
+
+The pattern used is the Synchronization (Execution) pattern using semaphores.
+
+The main process creates multiple child processes and synchronizes their execution using a semaphore. 
+Each child process sleeps for a specified execution time and signals the semaphore when it finishes. 
+The main process waits for all child processes to finish by waiting on the semaphore.
+
+The main function takes command-line arguments to determine the number of child processes and the execution time. 
+
+The program retrieves the start time using `gettimeofday()` and stores it in the variable `start`. 
+It then forks a specified number of child processes and calls the `child_process` function for each child process, 
+passing the semaphore and the execution time in microseconds. Each child process sleeps for the specified execution time and signals the semaphore before exiting.
+
+After forking all child processes, the main process waits for all child processes to finish by waiting on the semaphore. Once all child processes have finished, 
+the program retrieves the end time using `gettimeofday()` and stores it in the variable `end`. It calculates the elapsed time in microseconds and prints it.
+
+---PSEUDOCODE-------------------------------------------------------------------
+
+Create a function time_to_microseconds(timeType, timeValue):
+    Convert the input time to microseconds based on the timeType
+    Return the time in microseconds
+
+Create a function child_process(semaphore, executionTimeMicroseconds):
+    Sleep for the specified execution time
+    Signal the semaphore
+
+Main function:
+    If the number of command-line arguments is not equal to 3:
+        Print an error message
+        Exit the program
+
+    Retrieve the number of child processes from the command-line arguments
+    Retrieve the time string from the command-line arguments
+    Extract the time type (last character) from the time string
+    Convert the time value (integer part) and time type to microseconds
+
+    Create a semaphore named "sem" with initial value 0
+
+    Initialize variables start and end of type struct timeval
+
+    Get the current time and store it in start
+
+    For each child process:
+        Fork a child process:
+            If fork() returns 0: (Child process)
+                Call child_process with the semaphore and executionTimeMicroseconds
+                Exit the child process
+
+    Wait for all child processes to finish:
+        For each child process:
+            Wait for the semaphore
+
+    Get the current time and store it in end
+
+    Calculate the elapsed time in microseconds:
+        elapsedTimeMicroseconds = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec)
+
+    Print the elapsed time in microseconds
+
+    Clean/close the semaphore:
+        Close the semaphore
+        Unlink the semaphore named "sem"
+
+    Exit the program

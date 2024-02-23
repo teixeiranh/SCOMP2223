@@ -1,0 +1,11 @@
+Exercícios não resolvidos:
+==========================
+-ex15
+-ex17
+-ex16
+
+
+Exercícios com problemas:
+=========================
+-ex03
+-ex10

@@ -1,0 +1,21 @@
+1
+a) 
+    The output of this code will be one of two possibilities, depending on the 
+    process that runs first (parent or child). 
+    If the first process that runs is the child, the output will be:
+        1.x=2
+        3.1234; x=0
+        2.x=0
+        3.(number bigger than 1234); x=0
+    If the first process running is the parent process, the output will be:
+        2.x=0
+        3.(number bigger than 1234); x=0
+        1.x=2
+        3.1234; x=0
+
+b)
+    No, I am not. 
+    Both processes are competing for the CPU time, running asynchronously 
+    and concurrently and, in fact, I don't know which one will be processed first.
+    If the child process runs first, I will see the following sequence: line 6-
+    line 11 - line 9 - line 11. In this case, 11 appears first. 

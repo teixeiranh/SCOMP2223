@@ -1,0 +1,10 @@
+Excluding the main process and thread:
+
+a)
+    We will have 3 additional processes. One for line 2 (child), another one for
+    line 5 (grandChild) and another 1 for line 10 (child, sibling for to the 
+    first child).
+
+b)
+    Only one new thread is created, most precisely by the child process. 
+    

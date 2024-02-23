@@ -1,0 +1,48 @@
+Producer-consumer
+
+1. Define the maximum number of records as MAX_RECORDS.
+2. Define the names for the semaphore and shared memory as SEM_RECORDS and SHM_NAME, respectively.
+3. Define the structure Data_Records to hold the record information, including an identification number, name, and address.
+4. Define the structure SharedMemory to hold the semaphore and an array of Data_Records.
+5. Define the functions:
+   a. insertRecord(sharedMemory: SharedMemory): void
+      - Wait on the semaphore sharedMemory.sem_record.
+      - Read the input data for a new record from the user.
+      - Check if the maximum number of records (MAX_RECORDS) has been reached.
+         - If it has, print a message stating that the maximum number of records has been reached.
+         - If not, find the first available slot in the shared memory's records array (where the identification number is 0) and assign the new record to it.
+      - Post the semaphore sharedMemory.sem_record to release it.
+   
+   b. consultRecord(sharedMemory: SharedMemory): void
+      - Wait on the semaphore sharedMemory.sem_record.
+      - Read the identification number to search for from the user.
+      - Iterate through the shared memory's records array to find a record with a matching identification number.
+      - If a matching record is found, print its details (identification number, name, and address).
+      - If no matching record is found, print a message stating that the record was not found.
+      - Post the semaphore sharedMemory.sem_record to release it.
+   
+   c. consultAllRecords(sharedMemory: SharedMemory): void
+      - Wait on the semaphore sharedMemory.sem_record.
+      - Iterate through the shared memory's records array.
+      - For each record that has a non-zero identification number, print its details (identification number, name, and address).
+      - Post the semaphore sharedMemory.sem_record to release it.
+
+6. Inside the main function:
+   a. Create or open the shared memory object using shm_open, providing the name SHM_NAME, and specifying the flags O_CREAT | O_RDWR. Assign the returned file descriptor to a variable (e.g., fd).
+   b. Set the size of the shared memory object using ftruncate, passing the file descriptor (fd) and the size of the SharedMemory structure (sizeof(SharedMemory)).
+   c. Map the shared memory object into the address space using mmap, specifying NULL as the desired address, the size of the SharedMemory structure, and the PROT_READ | PROT_WRITE flags. Assign the returned pointer to sharedMemory.
+   d. Create or open the semaphore using sem_open, providing the name SEM_RECORDS, the flags O_CREAT, and the permissions 0666. Assign the returned semaphore pointer to sharedMemory.sem_record.
+   e. Implement a menu loop:
+      - Print the menu options for insert, consult, consult all, and exit.
+      - Read the user's choice.
+      - Based on the choice, call the corresponding function (insertRecord, consultRecord, or consultAllRecords), passing the sharedMemory object.
+      - If the choice is to exit:
+         - Clean up by calling sem_close on sharedMemory.sem_record to close the semaphore.
+         - Unlink the semaphore using sem_unlink, providing the name SEM_RECORDS.
+         - Unmap the shared memory using munmap, passing the sharedMemory pointer and the size of the SharedMemory structure.
+         - Close the file descriptor using close, passing the fd.
+         - Unlink the shared memory object using shm_unlink, providing the name SHM_NAME.
+         - Exit the program with a status of 0.
+   f. End of the menu loop.
+
+7. End of the main function.

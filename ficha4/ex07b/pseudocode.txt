@@ -1,0 +1,63 @@
+---PATTERN----------------------------------------------------------------------
+
+The pattern used is the Synchronization (Execution) pattern using semaphores.
+
+In the program a parent process and a child process need to synchronize their actions before eating and drinking. 
+The program uses two semaphores, `chipsSemaphore` and `beerSemaphore`, to control the synchronization.
+
+This pattern ensures that both the parent and child processes wait for each other to complete their 
+respective tasks before proceeding.
+
+---PSEUDOCODE-------------------------------------------------------------------
+
+Create three semaphores: chipsSemaphore, beerSemaphore, allBoughtSemaphore
+
+Create a function buy_chips:
+    Print "Process is buying chips"
+
+Create a function buy_beer:
+    Print "Process is buying beer"
+
+Create a function eat_and_drink:
+    Print "Eating and drinking"
+
+Main function:
+    Seed the random number generator
+
+    Unlink the semaphores
+
+    Create chipsSemaphore with initial value 0
+    Create beerSemaphore with initial value 0
+    Create allBoughtSemaphore with initial value 0
+
+    For i in range 0 to 5:
+        Fork a child process:
+            If fork() returns 0: (Child process)
+                Sleep for a random amount of time
+
+                If i < 3:
+                    Call buy_chips()
+                    Signal chipsSemaphore
+                Else:
+                    Call buy_beer()
+                    Signal beerSemaphore
+
+                Wait until all processes have completed their purchases
+                Wait for allBoughtSemaphore
+
+                Call eat_and_drink()
+
+                Exit the child process
+
+    For i in range 0 to 2:
+        Wait for chipsSemaphore
+        Wait for beerSemaphore
+
+    For i in range 0 to 5:
+        Signal allBoughtSemaphore
+
+    Wait for all child processes to exit
+
+    Unlink the semaphores
+
+    Exit the program

@@ -1,0 +1,16 @@
+Exercícios não resolvidos:
+==========================
+-ex15
+-ex16
+
+
+Exercícios com problemas:
+=========================
+-ex08- cant make main() reach the return 0, need to kill the execution in the terminal with CTRL-C
+     - problem solved with adding kill(getpid(), SIGUSR1); after capturing sigusr1_handler
+     - could have used exit(0) also
+
+-ex12- The SA_NOCLDSTOP and SA_NOCLDWAIT flags are used to prevent the kernel 
+       from automatically reaping the child processes when they exit or stop. 
+       This allows the parent process to explicitly wait for them using wait().
+       Is this information correct? 
